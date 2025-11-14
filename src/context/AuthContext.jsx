@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useState, useCallback } from "react";
-import jwt_decode from "jwt-decode";
+import React, { createContext, useEffect, useState, useCallback, useContext } from "react";
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosConfig";
 
@@ -120,4 +120,8 @@ export function AuthProvider({ children }) {
             {!loading && children}
         </AuthContext.Provider>
     );
+}
+
+export function useAuth() {
+    return useContext(AuthContext);
 }

@@ -7,6 +7,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/styles.css";
+import './styles/app.css'; 
 
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
@@ -22,3 +23,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+
