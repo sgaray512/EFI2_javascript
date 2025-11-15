@@ -27,3 +27,6 @@ git clone git@github.com:sgaray512/EFI2_javascript.git
 # Instalar dependencias (package.json)
 dentro de la carpeta donde se clonó el repositorio (EFI2_javascript):
 npm install
+
+# Para correr el proyecto
+npm run dev

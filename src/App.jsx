@@ -6,6 +6,8 @@ import PostList from "./pages/PostList";
 import PostForm from "./pages/PostForm";
 import ReviewList from "./pages/ReviewList";
 import ReviewForm from "./pages/ReviewForm";
+import CategoryList from "./pages/CategoryList";
+import CategoryForm from "./pages/CategoryForm";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -54,6 +56,24 @@ export default function App() {
                         element={
                             <ProtectedRoute roles={["user", "admin"]}>
                                 <ReviewForm />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* Categorías */}
+                    <Route
+                        path="/categorias"
+                        element={
+                            <ProtectedRoute roles={["admin", "moderator"]}>
+                                <CategoryList />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/categorias/nueva"
+                        element={
+                            <ProtectedRoute roles={["admin"]}>
+                                <CategoryForm />
                             </ProtectedRoute>
                         }
                     />

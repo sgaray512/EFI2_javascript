@@ -24,16 +24,14 @@ export default function LoginForm() {
                 validationSchema={schema}
                 onSubmit={async (values, { setSubmitting }) => {
                     try {
-                        const res = await api.post("/auth/login", values);
+                        const res = await api.post("/login", values);
+                        const token = res.data.access_token;
 
-                        const access = res.data.access_token;
-                        const refresh = res.data.refresh_token;
-
-                        if (!access || !refresh) {
-                            throw new Error("El servidor no envió tokens válidos");
+                        if (!token) {
+                            throw new Error("El servidor no envió token válido");
                         }
 
-                        login(access, refresh);
+                        login(token);
                         toast.success("Inicio de sesión exitoso");
                         navigate("/");
 
@@ -87,6 +85,6 @@ export default function LoginForm() {
                     </Form>
                 )}
             </Formik>
-        </ div>
+        </div>
     );
 }

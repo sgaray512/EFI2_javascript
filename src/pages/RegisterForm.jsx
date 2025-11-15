@@ -27,7 +27,7 @@ export default function RegisterForm() {
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            const res = await api.post("/auth/register", values);
+            const res = await api.post("/register", values);
 
             if (res.status === 201 || res.status === 200) {
                 toast.success("Usuario registrado con éxito");

@@ -12,7 +12,7 @@ export default function ReviewForm({ onCommentCreated }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.post(`/posts/${id}/comments`, { content });
+            await api.post(`/posts/${id}/comments`);
             toast.success("Comentario creado");
             setContent("");
             if (onCommentCreated) onCommentCreated();

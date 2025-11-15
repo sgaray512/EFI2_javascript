@@ -12,8 +12,8 @@ export default function PostList() {
 
     const fetchPosts = async () => {
         try {
-            const res = await api.get("/posts");
-            setPosts(res.data);
+            const response = await api.get("/posts");
+            setPosts(response.data);
         } catch (err) {
             console.error(err);
             toast.error("Error cargando posts");
@@ -31,7 +31,8 @@ export default function PostList() {
             toast.success("Post eliminado");
             fetchPosts();
         } catch (err) {
-            toast.error("No se pudo eliminar");
+            console.error(err);
+            toast.error("No se pudo eliminar el post");
         }
     };
 
@@ -48,7 +49,7 @@ export default function PostList() {
             <h2>Publicaciones</h2>
 
             {user && (
-                <Button 
+                <Button
                     label="Crear Post"
                     onClick={() => navigate("/posts/nuevo")}
                     className="mb-3"
@@ -56,21 +57,23 @@ export default function PostList() {
             )}
 
             <ul>
+                {posts.length === 0 && <p>No hay publicaciones disponibles.</p>}
+
                 {posts.map((post) => (
                     <li key={post.id} className="post-item">
                         <h3>{post.title}</h3>
-                        <p>{post.content.substring(0, 120)}...</p>
-                        <p><strong>Autor:</strong> {post.author?.name}</p>
+                        <p>{post.content ? post.content.substring(0, 120) : ""}</p>
+                        <p><strong>Autor:</strong> {post.author?.name || "Desconocido"}</p>
                         <p><strong>Categoría:</strong> {post.category?.name || "Sin categoría"}</p>
 
                         <div className="actions">
-                            <Button 
+                            <Button
                                 label="Ver"
                                 onClick={() => navigate(`/posts/${post.id}`)}
                             />
 
                             {canEdit(post) && (
-                                <Button 
+                                <Button
                                     label="Editar"
                                     className="p-button-warning"
                                     onClick={() => navigate(`/posts/${post.id}/editar`)}
@@ -78,7 +81,7 @@ export default function PostList() {
                             )}
 
                             {canDelete(post) && (
-                                <Button 
+                                <Button
                                     label="Eliminar"
                                     className="p-button-danger"
                                     onClick={() => handleDelete(post.id)}

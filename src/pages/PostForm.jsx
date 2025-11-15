@@ -22,44 +22,73 @@ export default function PostForm() {
     const [categories, setCategories] = useState([]);
 
     const fetchCategories = async () => {
-        const res = await api.get("/categories");
-        setCategories(res.data);
+        try {
+            const res = await api.get("/categories");
+            setCategories(res.data);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error cargando categorías");
+        }
     };
 
     const fetchPost = async () => {
         if (!id) return;
+
         try {
             const res = await api.get(`/posts/${id}`);
             setPost({
                 title: res.data.title,
                 content: res.data.content,
-                category_id: res.data.category_id
+                category_id: res.data.category ? res.data.category.id : null
             });
-        } catch {
-            toast.error("Error cargando post");
+        } catch (error) {
+            console.error(error);
+            toast.error("Error cargando el post");
         }
     };
 
     useEffect(() => {
         fetchCategories();
         fetchPost();
-    }, []);
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            toast.error("No estás autenticado");
+            return;
+        }
+
+        const payload = {
+            title: post.title,
+            content: post.content,
+            category_id: post.category_id || null
+        };
 
         try {
             if (id) {
-                await api.put(`/posts/${id}`, post);
+                await api.put(`/posts/${id}`, payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 toast.success("Post actualizado");
             } else {
-                await api.post("/posts", post);
+                await api.post("/posts", payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 toast.success("Post creado");
             }
 
             navigate("/posts");
+
         } catch (err) {
-            toast.error("Error al guardar");
+            console.error(err);
+            if (err.response && err.response.data && err.response.data.errors) {
+                toast.error("Error: " + JSON.stringify(err.response.data.errors));
+            } else {
+                toast.error("Error al guardar el post");
+            }
         }
     };
 
@@ -69,14 +98,14 @@ export default function PostForm() {
 
             <form onSubmit={handleSubmit}>
                 <label>Título</label>
-                <InputText 
+                <InputText
                     value={post.title}
                     onChange={(e) => setPost({ ...post, title: e.target.value })}
                     required
                 />
 
                 <label>Contenido</label>
-                <InputTextarea 
+                <InputTextarea
                     rows={8}
                     value={post.content}
                     onChange={(e) => setPost({ ...post, content: e.target.value })}
@@ -86,7 +115,10 @@ export default function PostForm() {
                 <label>Categoría</label>
                 <Dropdown
                     value={post.category_id}
-                    options={categories.map(c => ({ label: c.name, value: c.id }))}
+                    options={categories.map(c => ({
+                        label: c.name,
+                        value: c.id
+                    }))}
                     onChange={(e) => setPost({ ...post, category_id: e.value })}
                     placeholder="Seleccionar categoría"
                 />
