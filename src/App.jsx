@@ -1,17 +1,29 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+// Páginas públicas
 import Home from "./pages/Home";
 import RegisterForm from "./pages/RegisterForm";
 import LoginForm from "./pages/LoginForm";
+import PostDetail from "./pages/PostDetail";
 import PostList from "./pages/PostList";
+
+// Formularios de posts
 import PostForm from "./pages/PostForm";
-import ReviewList from "./pages/ReviewList";
-import ReviewForm from "./pages/ReviewForm";
+
+// Páginas de Categorías
 import CategoryList from "./pages/CategoryList";
 import CategoryForm from "./pages/CategoryForm";
+
+// Panel Admin
+import AdminPanel from "./pages/AdminPanel";
+import CommentModerationPage from "./pages/CommentModerationPage";
+import UserManagementPage from "./pages/UserManagementPage";
+import StatsPage from "./pages/StatsPage";
+
+// Componentes globales
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
-
 
 export default function App() {
     return (
@@ -28,40 +40,39 @@ export default function App() {
 
                     {/* Posts */}
                     <Route path="/posts" element={<PostList />} />
-                    <Route path="/posts/:id" element={<ReviewList />} />
-
-                    {/* Crear post (solo user registrado) */}
+                    <Route path="/posts/:id" element={<PostDetail />} />
                     <Route
                         path="/posts/nuevo"
                         element={
-                            <ProtectedRoute roles={["user", "admin"]}>
+                            <ProtectedRoute roles={["user", "admin", "moderator"]}>
                                 <PostForm />
                             </ProtectedRoute>
                         }
                     />
-
-                    {/* Editar post (solo user o admin) */}
                     <Route
                         path="/posts/:id/editar"
                         element={
-                            <ProtectedRoute roles={["user", "admin"]}>
+                            <ProtectedRoute roles={["user", "admin", "moderator"]}>
                                 <PostForm />
                             </ProtectedRoute>
                         }
                     />
 
-                    {/* Comentarios */}
+                    {/* Panel de Administración */}
                     <Route
-                        path="/posts/:id/comentar"
+                        path="/admin"
                         element={
-                            <ProtectedRoute roles={["user", "admin"]}>
-                                <ReviewForm />
+                            <ProtectedRoute roles={["admin", "moderator"]}>
+                                <AdminPanel />
                             </ProtectedRoute>
                         }
                     />
-                    {/* Categorías */}
+
+                    {/* Secciones del Panel Admin */}
+
+                    {/* Gestión de categorías */}
                     <Route
-                        path="/categorias"
+                        path="/admin/categories"
                         element={
                             <ProtectedRoute roles={["admin", "moderator"]}>
                                 <CategoryList />
@@ -70,13 +81,45 @@ export default function App() {
                     />
 
                     <Route
-                        path="/categorias/nueva"
+                        path="/admin/categories/new"
                         element={
-                            <ProtectedRoute roles={["admin"]}>
+                            <ProtectedRoute roles={["admin", "moderator"]}>
                                 <CategoryForm />
                             </ProtectedRoute>
                         }
                     />
+
+                    <Route
+                        path="/admin/categories/:id/edit"
+                        element={
+                            <ProtectedRoute roles={["admin", "moderator"]}>
+                                <CategoryForm />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Gestión de usuarios */}
+                    <Route
+                        path="/admin/users"
+                        element={
+                            <ProtectedRoute roles={["admin"]}>
+                                <UserManagementPage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Estadísticas */}
+                    <Route
+                        path="/admin/stats"
+                        element={
+                            <ProtectedRoute roles={["admin"]}>
+                                <StatsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Ruta inválida → Home */}
+                    <Route path="*" element={<Navigate to="/" />} />
 
                 </Routes>
             </main>

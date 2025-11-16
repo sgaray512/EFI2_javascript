@@ -11,24 +11,33 @@ export default function ReviewForm({ onCommentCreated }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!content.trim()) {
+            toast.error("El comentario no puede estar vacío");
+            return;
+        }
+
         try {
-            await api.post(`/posts/${id}/comments`);
+            await api.post(`/posts/${id}/comments`, {
+                content,
+                post_id: parseInt(id)
+            });
             toast.success("Comentario creado");
             setContent("");
             if (onCommentCreated) onCommentCreated();
-        } catch {
+        } catch (err) {
+            console.error(err);
             toast.error("Error creando comentario");
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="review-form-container">
-            <h4>Agregar comentario</h4>
             <InputTextarea
                 className="review-form-textarea"
                 rows={4}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                placeholder="Escribe tu comentario..."
                 required
             />
             <Button type="submit" label="Enviar" className="mt-2" />

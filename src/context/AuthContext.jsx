@@ -44,7 +44,8 @@ export function AuthProvider({ children }) {
                 user,
                 login,
                 logout,
-                isAuthenticated: !!user
+                isAuthenticated: !!user,
+                token: user?.token
             }}
         >
             {children}

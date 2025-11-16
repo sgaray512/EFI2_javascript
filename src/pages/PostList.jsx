@@ -72,6 +72,14 @@ export default function PostList() {
                                 onClick={() => navigate(`/posts/${post.id}`)}
                             />
 
+                            {user && (
+                                <Button
+                                    label="Comentar"
+                                    className="p-button-success"
+                                    onClick={() => navigate(`/posts/${post.id}`)}
+                                />
+                            )}
+
                             {canEdit(post) && (
                                 <Button
                                     label="Editar"

@@ -13,45 +13,40 @@ function Navbar() {
         setMenuOpen(false);
     };
 
+    const isLogged = !!user;
+    const isAdmin = user?.role === "admin";
+    const isModerator = user?.role === "moderator";
+    const canManage = isAdmin || isModerator;
+
     return (
         <nav className="navbar">
-            {/* Logo */}
             <div className="logo" onClick={() => handleNavigate("/")}>
                 Miniblog
             </div>
 
             {/* Desktop Menu */}
             <ul className="nav-links desktop-only">
-
                 <li onClick={() => handleNavigate("/")}>Inicio</li>
                 <li onClick={() => handleNavigate("/posts")}>Posts</li>
 
-                {/* Crear post solo si está logueado */}
-                {user && (user.role === "user" || user.role === "admin") && (
+                {/* Crear Post: user / admin / moderator */}
+                {isLogged && (
                     <li onClick={() => handleNavigate("/posts/nuevo")}>
                         Crear Post
                     </li>
                 )}
 
-                {/* Opciones para admin */}
-                {user?.role === "admin" && (
+                {/* Panel admin: admin / moderator */}
+                {canManage && (
                     <li onClick={() => handleNavigate("/admin")}>
                         Panel Admin
                     </li>
                 )}
-
-                {/* Opciones para moderador */}
-                {(user?.role === "admin" || user?.role === "moderator") && (
-                    <li onClick={() => handleNavigate("/categorias")}>
-                        Categorías
-                    </li>
-                )}
-
             </ul>
 
-            {/* User Section */}
+            {/* User Section Desktop */}
             <div className="user-section desktop-only">
-                {!user ? (
+                {!isLogged ? (
                     <>
                         <Button
                             label="Login"
@@ -97,31 +92,27 @@ function Navbar() {
                         <li onClick={() => handleNavigate("/")}>Inicio</li>
                         <li onClick={() => handleNavigate("/posts")}>Posts</li>
 
-                        {/* Crear post solo user/admin */}
-                        {user && (user.role === "user" || user.role === "admin") && (
+                        {isLogged && (
                             <li onClick={() => handleNavigate("/posts/nuevo")}>
                                 Crear Post
                             </li>
                         )}
 
-                        {/* Admin */}
-                        {user?.role === "admin" && (
+                        {canManage && (
                             <li onClick={() => handleNavigate("/admin")}>
                                 Panel Admin
                             </li>
                         )}
 
-                        {/* Moderador */}
-                        {(user?.role === "admin" || user?.role === "moderator") && (
+                        {canManage && (
                             <li onClick={() => handleNavigate("/categorias")}>
                                 Categorías
                             </li>
                         )}
                     </ul>
 
-                    {/* Mobile User Section */}
                     <div className="user-section-mobile">
-                        {!user ? (
+                        {!isLogged ? (
                             <>
                                 <Button
                                     label="Login"

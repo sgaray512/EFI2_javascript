@@ -23,6 +23,7 @@ export default function RegisterForm() {
     const roles = [
         { label: "Usuario", value: "user" },
         { label: "Administrador", value: "admin" },
+        { label: "Moderador", value: "moderador"},
     ];
 
     const handleSubmit = async (values, { resetForm }) => {

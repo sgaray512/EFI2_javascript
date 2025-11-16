@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children, roles = [] }) {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
+    const location = useLocation();
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
+    if (!user || !localStorage.getItem("token")) {
+        logout();
+        return <Navigate to="/login" replace state={{ from: location }} />;
     }
 
     if (roles.length > 0 && (!user.role || !roles.includes(user.role))) {

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import api from "../api/axiosConfig";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
@@ -13,37 +13,64 @@ const schema = Yup.object({
 
 export default function CategoryForm() {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const isEditing = Boolean(id);
+
+    const [initialValues, setInitialValues] = useState({ name: "" });
+
+    useEffect(() => {
+        if (isEditing) {
+            const loadCategory = async () => {
+                try {
+                    const res = await api.get(`/categories/${id}`);
+                    setInitialValues({ name: res.data.name });
+                } catch (err) {
+                    toast.error("Error cargando categoría");
+                }
+            };
+            loadCategory();
+        }
+    }, [id, isEditing]);
 
     return (
         <div className="form-page">
-            <h2>Nueva Categoría</h2>
+            <h2>{isEditing ? "Editar Categoría" : "Nueva Categoría"}</h2>
 
             <Formik
-                initialValues={{ name: "" }}
+                enableReinitialize
+                initialValues={initialValues}
                 validationSchema={schema}
                 onSubmit={async (values, { setSubmitting }) => {
                     try {
-                        await api.post("/categories", values, {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                "Content-Type": "application/json",
-                                Accept: "application/json",
-                            },
-                        });
+                        const token = localStorage.getItem("token");
 
-                        toast.success("Categoría creada");
+                        if (isEditing) {
+                            await api.put(`/categories/${id}`, values, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json",
+                                    Accept: "application/json",
+                                },
+                            });
+                            toast.success("Categoría actualizada");
+                        } else {
+                            await api.post("/categories", values, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json",
+                                    Accept: "application/json",
+                                },
+                            });
+                            toast.success("Categoría creada");
+                        }
+
                         navigate("/categorias");
 
                     } catch (err) {
                         console.error(err);
 
-                        if (err.response?.status === 403) {
-                            toast.error("No tienes permisos suficientes");
-                        } else if (err.response?.status === 422 || err.response?.status === 400) {
-                            toast.error("Error en los datos enviados");
-                        } else {
-                            toast.error("Error al crear categoría");
-                        }
+                        const msg = err.response?.data?.message || "Error en el servidor";
+                        toast.error(msg);
                     } finally {
                         setSubmitting(false);
                     }
