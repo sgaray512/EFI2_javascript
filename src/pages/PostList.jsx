@@ -4,6 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "../styles/post.css"
 
 export default function PostList() {
     const [posts, setPosts] = useState([]);

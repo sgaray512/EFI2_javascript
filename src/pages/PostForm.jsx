@@ -7,6 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { toast } from "react-toastify";
+import "../styles/crear_post.css"
 
 export default function PostForm() {
     const { id } = useParams();
