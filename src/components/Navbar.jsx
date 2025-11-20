@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { useAuth } from "../context/AuthContext";
-
+import "../styles/navbar.css"
 function Navbar() {
     const navigate = useNavigate();
     const { user, logout } = useAuth();

@@ -1,0 +1,8 @@
+.login-btn{
+    min-width: fit-content; 
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: auto;
+    padding: 10px 20pxs; 
+    margin: 5px;
+}

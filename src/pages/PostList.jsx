@@ -70,6 +70,7 @@ export default function PostList() {
                         <div className="actions">
                             <Button
                                 label="Ver"
+                                className="vista"
                                 onClick={() => navigate(`/posts/${post.id}`)}
                             />
 

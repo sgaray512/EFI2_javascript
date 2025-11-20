@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import "../styles/login.css"
 
 const schema = Yup.object({
     email: Yup.string().email("Email inválido").required("Email requerido"),

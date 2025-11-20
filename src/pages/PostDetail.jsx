@@ -6,6 +6,7 @@ import ReviewForm from "./ReviewForm";
 import { toast } from "react-toastify";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
+import "../styles/post_detail.css"
 
 export default function PostDetail() {
     const { id } = useParams();

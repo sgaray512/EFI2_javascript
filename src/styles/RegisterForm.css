@@ -62,6 +62,14 @@
     gap: 1rem;
     }
 }
+.register-btn {
+  min-width: fit-content; 
+  white-space: nowrap;
+  flex-shrink: 0;
+  height: auto;
+  padding: 10px 20px !important; 
+  margin: 5px;
+}
 
 /* FOOTER */
 footer {
